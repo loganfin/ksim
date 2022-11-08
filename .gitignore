@@ -1,3 +1,9 @@
+# ignore binary
+ksim
+
+# ignore build directory
+build/
+
 # Prerequisites
 *.d
 

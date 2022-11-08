@@ -1,0 +1,1 @@
+- if something is `released`, the kernel must first `step` before a process of the same name can be `added` again
