@@ -2,6 +2,8 @@
 
 typedef struct Node_t {
     //char *data;
+    // this data ideally be a `process` pointer
+    // Process_t *process;
     int data;
     struct Node_t* next;
 } Node_t;
