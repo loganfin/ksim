@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "ksim.h"
 #include "queue.h"
 
@@ -15,10 +17,18 @@ int ksim_loop(void)
     Queue_t *ready = queue_create();
     Queue_t *blocked = queue_create();
 
-    if ((error = enqueue(ready, 2)) != 0) {
-        return error;
-    }
+    enqueue(ready, 2);
     enqueue(ready, 3);
+    enqueue(ready, 4);
+
+    enqueue(blocked, dequeue(ready));
+
+    printf("ready queue\n");
     queue_print(ready);
+    printf("blocked queue\n");
+    queue_print(blocked);
+
+    queue_clean(ready);
+    queue_clean(blocked);
     return error;
 }

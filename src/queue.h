@@ -15,12 +15,16 @@ typedef struct Queue_t {
 
 Node_t *node_create(int);
 Queue_t *queue_create();
+
+// int enqueue(Queue_t *, Process_t *)
 int enqueue(Queue_t *, int);
+
+// Process_t *dequeue(Queue_t *);
 int dequeue(Queue_t *);
 int queue_print(Queue_t *);
+int queue_clean(Queue_t *);
 
 /*
-int front(char[]);
-int rear(char
-int queue_clean(Queue_t *);
+Process_t front(Queue_t *);
+Process_t rear(Queue_t *);
 */

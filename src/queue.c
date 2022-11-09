@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 #include "queue.h"
+//#include "process.h"
 
 Node_t *node_create(int str)
 {
@@ -50,8 +51,10 @@ int enqueue(Queue_t *queue, int data)
         queue -> head = temp;
         queue -> tail = temp;
     }
-    queue -> tail -> next = temp;
-    queue -> tail = temp;
+    else {
+        queue -> tail -> next = temp;
+        queue -> tail = temp;
+    }
     return 0;
 
     /*
@@ -68,7 +71,29 @@ int enqueue(Queue_t *queue, int data)
 
 int dequeue(Queue_t *queue)
 {
-    return 0;
+    /* example use:
+     * enqueue(blocked, dequeue(ready));
+     */
+    // should this return the value of the popped data?
+    // set the new head equal to head -> next
+    // remove / free the head
+
+    // Process_t temp_data = NULL;
+    int temp_data = 0;
+    Node_t *temp = NULL;
+    if (queue -> head == NULL) {
+        return temp_data;
+    }
+
+    temp_data = queue -> head -> data;
+    temp = queue -> head;
+    queue -> head = queue -> head -> next;
+
+    if (queue -> head == NULL) {
+        queue -> tail = NULL;
+    }
+    free(temp);
+    return temp_data;
 }
 
 int queue_print(Queue_t *queue)
@@ -81,3 +106,13 @@ int queue_print(Queue_t *queue)
     }
     return 0;
 }
+
+int queue_clean(Queue_t *queue)
+{
+    // while head is not NULL, dequeue
+    while (queue -> head != NULL) {
+        dequeue(queue);
+    }
+    return 0;
+}
+
