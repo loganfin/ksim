@@ -1,7 +1,7 @@
 # to build, type `make`
 # to clean, type `make clean`
 
-CC = gcc
+CC = g++
 CFLAGS = -Wall
 BIN = ksim
 # replace OBJS and HDRS with a

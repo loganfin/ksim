@@ -1,5 +1,23 @@
 #pragma once
 
+#include "node.hpp"
+#include "process.hpp"
+
+class Queue_t {
+    public:
+        Queue_t();
+        Queue_t(Process_t *);
+        ~Queue_t();
+        int enqueue(Process_t *);
+        Process_t *dequeue();
+        Process_t *top();
+        void print();
+    private:
+        Node_t *head;
+        Node_t *tail;
+};
+
+/*
 typedef struct Node_t {
     //char *data;
     // this data ideally be a `process` pointer
@@ -7,11 +25,14 @@ typedef struct Node_t {
     int data;
     struct Node_t* next;
 } Node_t;
+*/
 
+/*
 typedef struct Queue_t {
     struct Node_t* head;
     struct Node_t* tail;
 } Queue_t;
+*/
 
 Node_t *node_create(int);
 Queue_t *queue_create();
