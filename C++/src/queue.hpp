@@ -1,18 +1,23 @@
 #pragma once
 
+#include <string>
+
 #include "node.hpp"
 #include "process.hpp"
 
 class Queue_t {
     public:
         Queue_t();
-        Queue_t(Process_t *);
+        Queue_t(std::string);
+        //Queue_t(Process_t *);
         ~Queue_t();
-        int enqueue(Process_t *);
+        int set_name(std::string);
+        int enqueue(Process_t * = NULL);
         Process_t *dequeue();
         Process_t *top();
         void print();
     private:
+        std::string name;
         Node_t *head;
         Node_t *tail;
 };

@@ -13,21 +13,36 @@
  * 5. exit
  */
 
+int find(Queue_t [], std::string);
+
+const int num_queues = 5;
+
 int ksim_loop(void)
 {
     int error = 0;
-    Queue_t new_q;
-    Queue_t ready_q;
-    Queue_t running_q;
-    Queue_t blocked_q;
-    Queue_t exit_q;
+
+    //Queue_t queue_list[num_queues];
+    Queue_t new_q("New");
+    Queue_t ready_q("Ready");
+    Queue_t running_q("Running");
+    Queue_t blocked_q("Blocked");
+    Queue_t exit_q("Exit");
+
+    new_q.enqueue();
+    new_q.enqueue();
+    new_q.print();
+    new_q.dequeue();
+    new_q.print();
+
+
+    /*
     Process_t *temp_process = NULL;
     //Process_t *two_p = new Process_t(2);
 
-    temp_process = new Process_t(1);
-    new_q.enqueue(temp_process);
-    temp_process = new Process_t(2);
-    new_q.enqueue(temp_process);
+    //temp_process = new Process_t;
+    new_q.enqueue();
+    //temp_process = new Process_t;
+    new_q.enqueue();
     new_q.print();
     temp_process = new_q.top();
     std::cout << "top of new_q is " << temp_process->get_pid() << std::endl;
@@ -39,6 +54,7 @@ int ksim_loop(void)
     ready_q.enqueue(new_q.dequeue());
     new_q.print();
     ready_q.print();
+    */
 
     return error;
 }
@@ -67,3 +83,16 @@ int ksim_loop(void)
     return error;
 }
 */
+
+int find(Queue_t queue_list[], std::string target)
+{
+    // bool found = false;
+    // for (int i = 0; i < num_queues; i++) {
+    //     found = queue_list[i].find(target);
+    //     if (found == true) {
+    //         return true;
+    //     }
+    // }
+    // return false
+    return 0;
+}

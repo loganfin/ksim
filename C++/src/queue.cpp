@@ -119,12 +119,24 @@
 // }
 
 
-Queue_t::Queue_t() : head(NULL), tail(NULL)
+Queue_t::Queue_t() : name(""), head(NULL), tail(NULL)
 {
     std::cout << "Queue created" << std::endl;
     return;
 }
 
+Queue_t::Queue_t(std::string desired_name) : name(desired_name), head(NULL), tail(NULL)
+{
+    std::cout << "Queue created with name \"" << name << "\"" << std::endl;
+    return;
+}
+
+int Queue_t::set_name(std::string desired_name)
+{
+    name = desired_name;
+    return 0;
+}
+/*
 Queue_t::Queue_t(Process_t *desired_data)
 {
     //this->data = desired_data;
@@ -133,15 +145,37 @@ Queue_t::Queue_t(Process_t *desired_data)
     //std::cout << "Queue created with head address of " << head -> data << std::endl;
     return;
 }
+*/
 
 Queue_t::~Queue_t()
 {
     std::cout << "Queue destroyed" << std::endl;
+    Node_t *current = head;
+    Node_t *next = NULL;
+    while (current != NULL) {
+        next = current -> next;
+        delete current;
+        current = next;
+    }
+    head = NULL;
 }
+
+/*
+int Queue_t::enqueue()
+{
+    return 0;
+}
+*/
 
 int Queue_t::enqueue(Process_t *process)
 {
-    Node_t *temp_node = new Node_t(process);
+    Node_t *temp_node = NULL;
+    if (process == NULL) {
+        temp_node = new Node_t();
+    }
+    else {
+        temp_node = new Node_t(process);
+    }
     if (temp_node == NULL) {
         return 1;
     }
@@ -172,7 +206,7 @@ Process_t *Queue_t::dequeue()
     if (head == NULL) {
         tail = NULL;
     }
-    //delete temp_node;
+    delete temp_node;
     return temp_data;
 }
 
