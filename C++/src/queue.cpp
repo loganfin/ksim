@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "node.hpp"
 #include "process.hpp"
 #include "queue.hpp"
 //#include "process.h"
