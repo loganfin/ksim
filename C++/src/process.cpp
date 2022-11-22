@@ -4,10 +4,10 @@
 
 int Process_t::instance_count = 0;
 
-Process_t::Process_t() : pid(instance_count)
+Process_t::Process_t() : next(NULL), pid(instance_count), name(std::to_string(pid))
 {
-    instance_count++;
     std::cout << "Process creaed" << std::endl;
+    instance_count++;
     return;
 }
 
@@ -18,15 +18,16 @@ Process_t::Process_t(int desired_pid) : pid(desired_pid)
     return;
 }
 */
+Process_t::Process_t(std::string desired_name) : next(NULL), pid(instance_count), name(desired_name)
+{
+    std::cout << "Process creaed" << std::endl;
+    instance_count++;
+    return;
+}
 
 Process_t::~Process_t()
 {
     //delete this;
-    std::cout << "Process destroyed" << std::endl;
+    std::cout << "Process " << name <<" destroyed" << std::endl;
     return;
-}
-
-int Process_t::get_pid()
-{
-    return pid;
 }

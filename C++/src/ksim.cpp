@@ -28,11 +28,19 @@ int ksim_loop(void)
     Queue_t blocked_q("Blocked");
     Queue_t exit_q("Exit");
 
-    new_q.enqueue();
-    new_q.enqueue();
+    new_q.create_process("one");
+    new_q.create_process("two");
+    new_q.create_process("three");
+    std::cout << "new_q:" << std::endl;
     new_q.print();
-    new_q.dequeue();
+    running_q.enqueue(new_q.detach_head());
+    std::cout << "new_q:" << std::endl;
     new_q.print();
+    std::cout << "running_q:" << std::endl;
+    running_q.print();
+    //new_q.enqueue();
+    //new_q.enqueue();
+    new_q.kill_head();
 
 
     /*

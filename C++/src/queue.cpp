@@ -15,9 +15,9 @@
 #include "queue.hpp"
 //#include "process.h"
 
-// int Node_t::*node_create(int str)
+// int Process_t::*node_create(int str)
 // {
-//     Node_t *node = malloc(sizeof(*node));
+//     Process_t *node = malloc(sizeof(*node));
 //     if (node == NULL) {
 //         return node;
 //     }
@@ -44,7 +44,7 @@
 //     // set tail -> next = a new node
 //     // set tail == new node
 //     // if the queue is empty, set the head equal to the new node
-//     Node_t *temp = node_create(data);
+//     Process_t *temp = node_create(data);
 //     if (temp == NULL) {
 //         return 1;
 //     }
@@ -60,7 +60,7 @@
 //     return 0;
 // 
 //     /*
-//     Node_t *temp = node_create(data);
+//     Process_t *temp = node_create(data);
 //     if (queue -> head == NULL) {
 //         queue -> head = temp;
 //         queue -> tail = temp;
@@ -82,7 +82,7 @@
 // 
 //     // Process_t temp_data = NULL;
 //     int temp_data = 0;
-//     Node_t *temp = NULL;
+//     Process_t *temp = NULL;
 //     if (queue -> head == NULL) {
 //         return temp_data;
 //     }
@@ -100,7 +100,7 @@
 // 
 // int queue_print(Queue_t *queue)
 // {
-//     Node_t *prev = queue -> head;
+//     Process_t *prev = queue -> head;
 //     while (queue -> head != NULL) {
 //         printf("%d\n", queue -> head -> data);
 //         prev = queue -> head;
@@ -131,11 +131,13 @@ Queue_t::Queue_t(std::string desired_name) : name(desired_name), head(NULL), tai
     return;
 }
 
+/*
 int Queue_t::set_name(std::string desired_name)
 {
     name = desired_name;
     return 0;
 }
+*/
 /*
 Queue_t::Queue_t(Process_t *desired_data)
 {
@@ -149,33 +151,29 @@ Queue_t::Queue_t(Process_t *desired_data)
 
 Queue_t::~Queue_t()
 {
-    std::cout << "Queue destroyed" << std::endl;
-    Node_t *current = head;
-    Node_t *next = NULL;
+    Process_t *current = head;
+    Process_t *next = NULL;
+    std::cout << "destroying " << name << "..." << std::endl;
     while (current != NULL) {
         next = current -> next;
         delete current;
         current = next;
     }
     head = NULL;
+    std::cout << "Queue destroyed" << std::endl;
+    return;
 }
 
 /*
-int Queue_t::enqueue()
-{
-    return 0;
-}
-*/
+   int Queue_t::enqueue()
+   {
+   return 0;
+   }
+   */
 
-int Queue_t::enqueue(Process_t *process)
+int Queue_t::create_process(std::string desired_name)
 {
-    Node_t *temp_node = NULL;
-    if (process == NULL) {
-        temp_node = new Node_t();
-    }
-    else {
-        temp_node = new Node_t(process);
-    }
+    Process_t *temp_node = new Process_t(desired_name);
     if (temp_node == NULL) {
         return 1;
     }
@@ -184,47 +182,83 @@ int Queue_t::enqueue(Process_t *process)
         tail = temp_node;
     }
     else {
-        // perhaps some sort of "set_next(Node_t *)" setter in Node_t class instead of making data members public
+        // perhaps some sort of "set_next(Process_t *)" setter in Process_t class instead of making data members public
         tail -> next = temp_node;
         tail = temp_node;
     }
     return 0;
 }
 
-Process_t *Queue_t::dequeue()
+int Queue_t::enqueue(Process_t *process)
 {
-    Process_t *temp_data = NULL;
-    Node_t *temp_node = NULL;
-
+    /*
+       Process_t *temp_node = NULL;
+       if (process == NULL) {
+       temp_node = new Process_t();
+       }
+       else {
+       temp_node = new Process_t(process);
+       }
+       if (temp_node == NULL) {
+       return 1;
+       }
+       */
     if (head == NULL) {
-        return temp_data;
+        head = process;
+        tail = process;
     }
-    temp_data = head -> data;
-    temp_node = head;
-    head = head -> next;
+    else {
+        // perhaps some sort of "set_next(Process_t *)" setter in Process_t class instead of making data members public
+        tail -> next = process;
+        tail = process;
+    }
+    return 0;
+}
 
+Process_t *Queue_t::detach_head()
+{
+    Process_t *current = head;
+    if (current == NULL) {
+        return NULL;
+    }
+    head = head -> next;
     if (head == NULL) {
         tail = NULL;
     }
-    delete temp_node;
-    return temp_data;
+    current -> next = NULL;
+    return current;
 }
 
-Process_t *Queue_t::top()
+int Queue_t::kill_head()
+{
+    Process_t *current = head;
+
+    if (current == NULL) {
+        return 1;
+    }
+    head = head -> next;
+    if (head == NULL) {
+        tail = NULL;
+    }
+    delete current;
+    return 0;
+}
+
+std::string Queue_t::top()
 {
     // need to overload an operator to be able to print a Process_t using "<<"
     if (head == NULL) {
         return NULL;
     }
-    return head -> data;
+    return head -> name;
 }
 
 void Queue_t::print()
 {
-    //Node_t *prev = NULL;
-    Node_t *temp_head = head;
+    //Process_t *prev = NULL;
+    Process_t *temp_head = head;
     while (temp_head != NULL) {
-        std::cout << temp_head -> data -> get_pid() << std::endl;
+        std::cout << temp_head -> name << std::endl;
         //prev = temp_head;
         temp_head = temp_head -> next;
     }
