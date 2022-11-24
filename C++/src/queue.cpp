@@ -1,17 +1,9 @@
-/*
- sample use:
-  int error = 0
-  Queue_t ready;
-  error = queue_init(&ready);
-  if (error != 0) {
-  }
-  */
-
 #include <stdlib.h>
 #include <iostream>
 
 #include "process.hpp"
 #include "queue.hpp"
+#include "state.hpp"
 //#include "process.h"
 
 // int Process_t::*node_create(int str)
@@ -118,15 +110,15 @@
 // }
 
 
-Queue_t::Queue_t() : name(""), head(NULL), tail(NULL)
+Queue_t::Queue_t() : type("Undefined"), head(NULL), tail(NULL)
 {
     std::cout << "Queue created" << std::endl;
     return;
 }
 
-Queue_t::Queue_t(std::string desired_name) : name(desired_name), head(NULL), tail(NULL)
+Queue_t::Queue_t(std::string desired_type) : type(desired_type), head(NULL), tail(NULL)
 {
-    std::cout << "Queue created with name \"" << name << "\"" << std::endl;
+    std::cout << "Queue created with type \"" << type << "\"" << std::endl;
     return;
 }
 
@@ -152,7 +144,7 @@ Queue_t::~Queue_t()
 {
     Process_t *current = head;
     Process_t *next = NULL;
-    std::cout << "destroying " << name << "..." << std::endl;
+    std::cout << "destroying queue of type " << type << "..." << std::endl;
     while (current != NULL) {
         next = current -> next;
         delete current;
@@ -170,11 +162,11 @@ Queue_t::~Queue_t()
    }
    */
 
-int Queue_t::create_process(std::string desired_name)
+Process_t *Queue_t::spawn_process()
 {
-    Process_t *temp_node = new Process_t(desired_name);
+    Process_t *temp_node = new Process_t(type);
     if (temp_node == NULL) {
-        return 1;
+        return NULL;
     }
     if (head == NULL) {
         head = temp_node;
@@ -185,7 +177,7 @@ int Queue_t::create_process(std::string desired_name)
         tail -> next = temp_node;
         tail = temp_node;
     }
-    return 0;
+    return temp_node;
 }
 
 int Queue_t::enqueue(Process_t *process)
@@ -249,7 +241,7 @@ std::string Queue_t::top()
     if (head == NULL) {
         return NULL;
     }
-    return head -> name;
+    return head -> state;
 }
 
 void Queue_t::print()

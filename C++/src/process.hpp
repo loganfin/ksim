@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "state.hpp"
 
 class Process_t {
     public:
@@ -14,6 +15,6 @@ class Process_t {
 
         static int instance_count;
         const int pid;
-        const std::string name;
+        std::string state;
     private:
 };

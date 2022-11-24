@@ -1,0 +1,76 @@
+ideas:
+    io-event:
+        should there be four queues, each responsible for one of the four i/o operations?
+
+    what if the List_t nodes are Queue_t? (wouldn't work because we would as many queues as processes)
+
+    what if we have a Queue_t *
+
+    maintain a doubly linked list called "Process Table" that stores the names and states of every process in the simulator.
+    class List_t:
+        public:
+            List_t();                                       // create an empty list with no processes
+            ~List_t();                                      // destroy all queues associated with the list
+
+            int add(std::string process-name);              // adds a process to the list, will have a default state of "New"
+            int io-event(int io-dev-num);                   // move all process in the Blocked queue that were waiting on io-dev-num to the Ready queue
+            int release();                                  // moves running process to the Exit queue
+            int step();                                     // advances the simulation and does various housekeeping tasks
+            int wait(int io-dev-num)                        // move running process to the Blocked queue
+            void query(std::string process-name = "all");   // print the id and status of each process in the list
+            // void exit();                                    // calls the destructor (or maybe not?)
+
+            int queue_create();
+        private:
+            Queue_t *states;
+            Node_t *next_node;       // stores the address of the next node
+            Node_t *prev_node;       // stores the address of the previous node
+
+        Class Queue_t:
+            public:
+            private:
+                Queue_t *next_queue;
+                Process_t *next_process;
+
+opcodes:
+    add <process_name>:
+        creates a new process associated with a name (std::string). Cannot include whitespace.
+        upon creation, the process is added to New state.
+        32 ticks pass.
+        if a process is added with a non-unique name, do not create the process and do not pass any ticks.
+
+    exit:
+        closes the program
+
+    io-event <io-dev-num>:
+        <io-dev-num> can be a number in the range [0,3]. The entering of this command signifies that the <io-dev-num> device is ready.
+        upon calling, any process that was waiting on that specific <io-dev-num> device is moved to the ready queue.
+        1 tick passes.
+        if no process is waiting on <io-dev-num>, emit the message "No processes waiting on device <io-dev-num>"
+
+    query <process-name>:
+        prints the id and state of the specified process. if specified process is "all" or "", print all processes
+        0 ticks pass.
+        if no processes are associated with the specified name, an error will emit.
+
+    release:
+        moves the currently running process to the Exit state.
+        if a process is running when command is entered, 32 ticks pass.
+        if no process is running when command is entered, 0 ticks pass.
+
+    step:
+        causes ksim to advance the simulation and perform certain duties:
+            1. remove all processes that are in the Exit state. for each process removed, output "process <process-name> is banished to the void."
+            2. advance at most 1 process in the New state into the Ready state. if more than 1 process exists in the New pool, the process with the oldest creattion time is advanced.
+            3. advance at most 1 process from each i/o device in the Blocked state into the Ready state. this only occurs if the blocked process has waited for 1024 ticks.
+            4. if a process exists in the Running state, remove the process from the processor and place it in the Ready state.
+            5. if any processes are in the Ready state, dispatch a process to the processor.
+        if a proces was to the processor by being advanced from the Ready state to the Running state, 256 ticks pass.
+        otherwise, 1 tick passes.
+
+    wait <io-dev-num>:
+        causes the currently running process to block and wait on the i/o device specified by <io-dev-num>. <io-dev-num> is a number in the range [0,3].
+        processes must wait for 1024 ticks to pass or until the io-event command is entered.
+        multiple processes can wait on the same i/o device.
+        if a process exists in the Running state, the process is moved and 1 tick passes.
+        if no process exists in the Running state, no process is moved and 0 ticks pass.
