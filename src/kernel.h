@@ -18,9 +18,11 @@ class Kernel_t {
         int query(std::string = "all"); // print information on all processes in the p_table
 
         int update_p_table();           // update the proper PCB_t object in p_table with the relevant information
-        std::string prompt();
+        void prompt();
     private:
         // maybe Hash_t p_table;
+        const int max_ticks = 999999999;
+        const int max_tick_digits = 9;
         int ticks;
         List_t p_table;
         Queue_t new_q;
