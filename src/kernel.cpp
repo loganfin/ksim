@@ -15,4 +15,5 @@ Kernel_t::~Kernel_t()
 void Kernel_t::prompt()
 {
     std::cout << "ksim-" << std::setfill('0') << std::setw(max_tick_digits) << ticks << "> ";
+    return;
 }

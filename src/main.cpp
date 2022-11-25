@@ -12,10 +12,50 @@ int main()
     std::string buffer;
     std::vector<std::string> argv;
 
-    do {
+    while (1) {
+        argv.clear();
         ksimOS.prompt();
-        std::cin >> buffer;
+        getline(std::cin, buffer);
         error = tokenize(buffer, argv);
-    } while (argv.at(0) != "exit");
+        if (argv.size() == 0) {
+            continue;
+        }
+        /* single arg opcodes */
+        if (argv.at(0) == "exit") {
+            break;
+        }
+        else if (argv.at(0) == "release") {
+            std::cout << "release" << std::endl;
+            continue;
+        }
+        else if (argv.at(0) == "step") {
+            std::cout << "step" << std::endl;
+            continue;
+        }
+        else if (argv.at(0) == "query") {
+            std::cout << "query" << std::endl;
+            continue;
+        }
+
+        if (argv.size() > 1) {
+            /* double arg opcodes */
+            if (argv.at(0) == "add") {
+                std::cout << "add" << std::endl;
+                continue;
+            }
+            else if (argv.at(0) == "io-event") {
+                std::cout << "io-event" << std::endl;
+                continue;
+            }
+            else if (argv.at(0) == "wait") {
+                std::cout << "wait" << std::endl;
+                continue;
+            }
+        }
+        else {
+            std::cout << "Opcode \"" << argv.at(0) << "\" requires 1 operand.\n";
+            continue;
+        }
+    }
     return 0;
 }
