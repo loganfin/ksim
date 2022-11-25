@@ -44,10 +44,18 @@ int main()
                 continue;
             }
             else if (argv.at(0) == "io-event") {
+                if (std::stoi(argv.at(1)) < 0 || std::stoi(argv.at(1)) > 3) {
+                    std::cout << "Opcode \"" << argv.at(0) << "\" requires an operand in the range [0,3].\n";
+                    continue;
+                }
                 std::cout << "io-event" << std::endl;
                 continue;
             }
             else if (argv.at(0) == "wait") {
+                if (std::stoi(argv.at(1)) < 0 || std::stoi(argv.at(1)) > 3) {
+                    std::cout << "Opcode \"" << argv.at(0) << "\" requires an operand in the range [0,3].\n";
+                    continue;
+                }
                 std::cout << "wait" << std::endl;
                 continue;
             }
