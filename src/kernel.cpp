@@ -2,6 +2,9 @@
 #include <iostream>
 
 #include "kernel.h"
+#include "process.h"
+#include "list.h"
+#include "queue.h"
 
 Kernel_t::Kernel_t()
     : ticks(0), new_q("New"), ready_q("Ready"), running_q("Running"), exit_q("Exit"), blocked_q("Blocked")
@@ -17,7 +20,15 @@ Kernel_t::~Kernel_t()
 int Kernel_t::add(std::string pcb_name)
 {
     //p_table.prepend(pcb_name, new_q.enqueue());
-    p_table.prepend(pcb_name, nullptr);
+    Process_t *temp_process = new Process_t;
+    if (temp_process == nullptr) {
+        return 1;
+    }
+    if (p_table.prepend(pcb_name, temp_process) ==  1) {
+        return 1;
+    }
+    new_q.enqueue(temp_process);
+    ticks += 32;
     return 0;
 }
 

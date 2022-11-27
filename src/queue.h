@@ -9,6 +9,8 @@ class Queue_t {
         Queue_t() = delete;             // every Queue_t object must have a type initalized in the constructor
         Queue_t(std::string);
         ~Queue_t();
+
+        void enqueue(Process_t *data_addr);
     private:
         const std::string type;
         Process_t *head;

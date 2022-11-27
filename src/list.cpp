@@ -10,12 +10,14 @@ List_t::List_t() : head(nullptr)
 
 List_t::~List_t()
 {
-    PCB_t *temp = nullptr;
-    while (head != nullptr) {
-        temp = head;
-        head = head->next;
-        delete temp;
+    PCB_t *current = head;
+    PCB_t *next = nullptr;
+    while (current != nullptr) {
+        next = current->next;
+        delete current;
+        current = next;
     }
+    head = nullptr;
     std::cout << "list destroyed" << std::endl;
 }
 
