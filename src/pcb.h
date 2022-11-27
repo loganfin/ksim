@@ -10,9 +10,10 @@ class PCB_t {
         PCB_t() = delete;
         PCB_t(std::string desired_type, Process_t *desired_instance);
         ~PCB_t();
+
+        PCB_t *next;                    // the next PCB_t in the p_table
     private:
         /* linked list components */
-        PCB_t *next;                    // the next PCB_t in the p_table
         /* node data fields */
         Process_t *const p_instance;    // the value of p_instance shouldn't change (should always point to the same p_instance)
         const std::string pid;          // the name of the process assigned in the constructor

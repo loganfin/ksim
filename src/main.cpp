@@ -7,7 +7,6 @@
 
 int main()
 {
-    int error;
     Kernel_t ksimOS;
     std::string buffer;
     std::vector<std::string> argv;
@@ -16,13 +15,15 @@ int main()
         argv.clear();
         ksimOS.prompt();
         getline(std::cin, buffer);
-        error = tokenize(buffer, argv);
+        tokenize(buffer, argv); // try catch block here?
         if (argv.size() == 0) {
             continue;
         }
         /* single arg opcodes */
         if (argv.at(0) == "exit") {
+            std::cout << "Exiting...\n";
             break;
+            // return 0; //?
         }
         else if (argv.at(0) == "release") {
             std::cout << "release" << std::endl;
@@ -38,10 +39,16 @@ int main()
         }
         /* double arg opcodes */
         else if (argv.at(0) == "add") {
-            std::cout << "add" << std::endl;
+            try {
+                ksimOS.add(argv.at(1));
+                std::cout << "add" << std::endl;
+                //continue;
+            }
+            catch (...) {
+                std::cout << "Opcode \"" << argv.at(0) << "\" requires one operand.\n";
+            }
             continue;
         }
-            /* io-dev-num opcodes*/
         else if (argv.at(0) == "io-event") {
             try {
                 if (std::stoi(argv.at(1)) > -1 && std::stoi(argv.at(1)) < 4) {
@@ -70,6 +77,5 @@ int main()
             std::cout << "Invalid opcode.\n";
         }
     }
-    std::cout << "Exiting...\n";
     return 0;
 }
