@@ -8,7 +8,7 @@
 #include "queue.h"
 
 Kernel_t::Kernel_t()
-    : ticks(0), new_q("New"), ready_q("Ready"), running_q("Running"), exit_q("Exit"), blocked_q("Blocked")
+    : ticks(0), new_q("New"), ready_q("Ready"), running_q("Running"), exit_q("Exit"), blocked_q_0("Blocked"), blocked_q_1("Blocked"), blocked_q_2("Blocked"), blocked_q_3("Blocked")
 {
     std::cout << "kernel created" << std::endl;
 }
@@ -78,10 +78,16 @@ int Kernel_t::step()
         temp_process = new_q.dequeue();
         p_name = p_table.set_pcb_state(temp_process, "Ready");
         ready_q.enqueue(temp_process);
-        std::cout << "Process \"" << p_name << "\" moved from New to Ready.\n";
+        std::cout << "Process \"" << p_name << "\" moved from " << new_q.type << " to " << ready_q.type << ".\n";
     }
     // try to advance 1 process from blocked to ready if possible
     // move Running process to Ready queue
+    if (running_q.is_empty() == false) {
+        temp_process = running_q.dequeue();
+        p_name = p_table.set_pcb_state(temp_process, "Ready");
+        ready_q.enqueue(temp_process);
+        std::cout << "Process \"" << p_name << "\" moved from Running to Ready.\n";
+    }
     // try to move 1 process from Ready to Running
     if (ready_q.is_empty() == false) {
         temp_process = ready_q.dequeue();
@@ -96,6 +102,39 @@ int Kernel_t::step()
 
 int Kernel_t::wait(int io_dev_num)
 {
+    // check if a process exists in the running queue
+    // if no process, return error
+    // if process, move to specific blocked queue and update p_table
+    std::string p_name;
+    if (running_q.is_empty() == true) {
+        throw 1;
+    }
+    Process_t *temp_process = running_q.dequeue();
+    switch (io_dev_num) {
+        case 0:
+            p_name = p_table.set_pcb_state(temp_process, blocked_q_0.type, ticks, 0);
+            blocked_q_0.enqueue(temp_process);
+            std::cout << "Process \"" << p_name << "\" moved from " << running_q.type << " to " << blocked_q_0.type << ".\n";
+            break;
+        case 1:
+            p_name = p_table.set_pcb_state(temp_process, blocked_q_1.type, ticks, 1);
+            blocked_q_1.enqueue(temp_process);
+            std::cout << "Process \"" << p_name << "\" moved from " << running_q.type << " to " << blocked_q_1.type << ".\n";
+            break;
+        case 2:
+            p_name = p_table.set_pcb_state(temp_process, blocked_q_2.type, ticks, 2);
+            blocked_q_2.enqueue(temp_process);
+            std::cout << "Process \"" << p_name << "\" moved from " << running_q.type << " to " << blocked_q_2.type << ".\n";
+            break;
+        case 3:
+            p_name = p_table.set_pcb_state(temp_process, blocked_q_3.type, ticks, 3);
+            blocked_q_3.enqueue(temp_process);
+            std::cout << "Process \"" << p_name << "\" moved from " << running_q.type << " to " << blocked_q_3.type << ".\n";
+            break;
+        default:
+            break;
+    }
+    ticks += 1;
     return 0;
 }
 

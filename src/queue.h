@@ -14,8 +14,8 @@ class Queue_t {
         Process_t *dequeue();
         Process_t *kill_head();
         bool is_empty();
-    private:
         const std::string type;
+    private:
         Process_t *head;
         Process_t *tail;
 };

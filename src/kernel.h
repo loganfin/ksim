@@ -30,5 +30,8 @@ class Kernel_t {
         Queue_t ready_q;
         Queue_t running_q;
         Queue_t exit_q;
-        Queue_t blocked_q;
+        Queue_t blocked_q_0;
+        Queue_t blocked_q_1;
+        Queue_t blocked_q_2;
+        Queue_t blocked_q_3;
 };

@@ -77,7 +77,7 @@ int main()
         else if (argv.at(0) == "wait") {
             try {
                 if (std::stoi(argv.at(1)) > -1 && std::stoi(argv.at(1)) < 4) {
-                    std::cout << "wait" << std::endl;
+                    ksimOS.wait(stoi(argv.at(1)));
                     continue;
                 }
             }
