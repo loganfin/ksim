@@ -11,6 +11,9 @@ class Queue_t {
         ~Queue_t();
 
         void enqueue(Process_t *data_addr);
+        Process_t *dequeue();
+        Process_t *kill_head();
+        bool is_empty();
     private:
         const std::string type;
         Process_t *head;

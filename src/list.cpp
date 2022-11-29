@@ -44,15 +44,53 @@ int List_t::prepend(std::string pcb_name, Process_t *data_addr)
     PCB_t *temp_head = head;
     PCB_t *temp_pcb = new PCB_t(pcb_name, data_addr);
 
+    temp_pcb->set_state("New");
     head = temp_pcb;
     temp_pcb->next = temp_head;
     return 0;
 }
 
+std::string List_t::set_pcb_state(Process_t *target, std::string desired_state)
+{
+    PCB_t *current = head;
+    while (current != nullptr) {
+        if (current->p_instance == target) {
+            current->state = desired_state;
+            return current->pid;
+        }
+        current = current->next;
+    }
+    return "Error";
+}
+
+std::string List_t::remove_pcb(Process_t *target)
+{
+    PCB_t *current = head;
+    PCB_t *prev = head;
+    std::string p_name;
+    while (current != nullptr) {
+        if (current->p_instance == target) {
+            p_name = current->pid;
+            prev->next = current->next;
+            if (current == head) {
+                head = nullptr;
+            }
+            delete current;
+            current = nullptr;
+            return p_name;
+        }
+        prev = current;
+        current = current->next;
+    }
+    //delete current->next;
+    //std::cout << "Current PCB: " << current->pid << "\nNext PCB: " << current->next->pid << '\n';
+    return "error";
+}
+
 bool List_t::find(std::string target)
 {
     PCB_t *current = head;
-    while (current != NULL) {
+    while (current != nullptr) {
         if (current->pid == target) {
             return true;
         }

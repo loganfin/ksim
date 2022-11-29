@@ -9,6 +9,8 @@ class List_t {
         ~List_t();
 
         int prepend(std::string pcb_name, Process_t *data_addr);
+        std::string set_pcb_state(Process_t *target, std::string desired_state);
+        std::string remove_pcb(Process_t *target);
         bool find(std::string target);
         bool is_empty();
         PCB_t& get_pcb(std::string target);

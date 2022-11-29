@@ -13,10 +13,17 @@ PCB_t::~PCB_t()
     std::cout << "pcb with pid \"" << pid << "\" destroyed" << std::endl;
 }
 
+int PCB_t::set_state(std::string desired_state)
+{
+    state = desired_state;
+    return 0;
+}
+
 std::ostream& operator<<(std::ostream& out, const PCB_t& pcb)
 {
     out << "***\n";
-    out << "    id: " << pcb.pid << '\n';
+    out << "    id: \"" << pcb.pid << "\"\n";
+    out << "    state: \"" << pcb.state << "\"\n";
     out << "***\n";
     return out;
 }

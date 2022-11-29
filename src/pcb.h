@@ -8,8 +8,10 @@
 class PCB_t {
     public:
         PCB_t() = delete;
-        PCB_t(std::string desired_type, Process_t *desired_instance);
+        PCB_t(std::string desired_pid, Process_t *desired_instance);
         ~PCB_t();
+
+        int set_state(std::string desired_state);
 
         /* linked list components */
         PCB_t *next;                    // the next PCB_t in the p_table

@@ -31,3 +31,39 @@ void Queue_t::enqueue(Process_t *data_addr)
     }
     return;
 }
+
+Process_t *Queue_t::dequeue()
+{
+    Process_t *current = head;
+    if (current == nullptr) {
+        return nullptr;
+    }
+    head = head->next;
+    if (head == nullptr) {
+        tail = nullptr;
+    }
+    current->next = nullptr;
+    return current;
+}
+
+Process_t *Queue_t::kill_head()
+{
+    Process_t *current = head;
+    if (current == nullptr) {
+        return nullptr;
+    }
+    head = head->next;
+    if (head == nullptr) {
+        tail = nullptr;
+    }
+    delete current;
+    return current;
+}
+
+bool Queue_t::is_empty()
+{
+    if (head == nullptr) {
+        return true;
+    }
+    return false;
+}

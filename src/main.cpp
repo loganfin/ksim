@@ -26,11 +26,16 @@ int main()
             // return 0; //?
         }
         else if (argv.at(0) == "release") {
-            std::cout << "release" << std::endl;
+            try {
+                ksimOS.release();
+            }
+            catch (...) {
+                std::cout << "No process is currently Running.\n";
+            }
             continue;
         }
         else if (argv.at(0) == "step") {
-            std::cout << "step" << std::endl;
+            ksimOS.step();
             continue;
         }
         else if (argv.at(0) == "query") {

@@ -20,6 +20,7 @@ Kernel_t::~Kernel_t()
 
 int Kernel_t::add(std::string pcb_name)
 {
+    // process already exists
     if (p_table.find(pcb_name) == true) {
         return 1;
     }
@@ -44,11 +45,52 @@ int Kernel_t::io_event(int io_dev_num)
 
 int Kernel_t::release()
 {
+    // check if any process exists in the running queue
+    // if no process exists, return error
+    // if process exists, move process to Exit queue and update pcb in p_table
+    std::string p_name;
+    if (running_q.is_empty() == true) {
+        throw 1;
+    }
+    Process_t *temp_process = running_q.dequeue();
+    p_name = p_table.set_pcb_state(temp_process, "Exit");
+    exit_q.enqueue(temp_process);
+    std::cout << "Process \"" << p_name << "\" moved from Running to Exit.\n";
+    ticks += 32;
     return 0;
 }
 
 int Kernel_t::step()
 {
+    std::string p_name;
+    Process_t *temp_process = nullptr;
+    int add_ticks = 1;
+    // remove all process in the Exit state
+    while (exit_q.is_empty() == false) {
+        temp_process = exit_q.kill_head();
+        p_name = p_table.remove_pcb(temp_process);
+        std::cout << "Process \"" << p_name << "\" is banished to the void.\n";
+    }
+    p_name = "";
+
+    // try to move 1 process from New to Ready
+    if (new_q.is_empty() == false) {
+        temp_process = new_q.dequeue();
+        p_name = p_table.set_pcb_state(temp_process, "Ready");
+        ready_q.enqueue(temp_process);
+        std::cout << "Process \"" << p_name << "\" moved from New to Ready.\n";
+    }
+    // try to advance 1 process from blocked to ready if possible
+    // move Running process to Ready queue
+    // try to move 1 process from Ready to Running
+    if (ready_q.is_empty() == false) {
+        temp_process = ready_q.dequeue();
+        p_name = p_table.set_pcb_state(temp_process, "Running");
+        running_q.enqueue(temp_process);
+        std::cout << "Process \"" << p_name << "\" moved from Ready to Running.\n";
+        add_ticks = 256;
+    }
+    ticks += add_ticks;
     return 0;
 }
 
@@ -59,24 +101,6 @@ int Kernel_t::wait(int io_dev_num)
 
 void Kernel_t::query(std::string target)
 {
-    // if the target is "all", create a vector of 
-    // if a specific target is supplied, find the target in the p_table.
-    /*
-    if (p_table.head == nullptr) {
-        std::cout << "Process \"" << target << "\" not found." << std::endl;
-        return;
-    }
-
-    if (target == "all") {
-    }
-    */
-    /*
-    std::string info = "Process \"" + target + "\" not found.\n";
-    if (p_table.find(target) == true) {
-        info = "***\n" + p_table.get_info(target) + "***\n";
-    }
-    return info;
-    */
     if (target == "all" && p_table.is_empty() == false) {
         std::cout << p_table;
         return;
