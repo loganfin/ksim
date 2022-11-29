@@ -48,3 +48,60 @@ int List_t::prepend(std::string pcb_name, Process_t *data_addr)
     temp_pcb->next = temp_head;
     return 0;
 }
+
+bool List_t::find(std::string target)
+{
+    PCB_t *current = head;
+    while (current != NULL) {
+        if (current->pid == target) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+bool List_t::is_empty()
+{
+    if (head == nullptr) {
+        return true;
+    }
+    return false;
+}
+
+PCB_t& List_t::get_pcb(std::string target)
+{
+    PCB_t *current = head;
+    while (current != nullptr) {
+        if (current->pid == target) {
+            return *current;
+        }
+        current = current->next;
+    }
+    throw "Does not exist in the list";
+}
+/*
+std::ostream& List_t::get_pcb(std::ostream& out, std::string target)
+{
+    PCB_t *current = head;
+    while (current != NULL) {
+        if (current->pid == target) {
+            out << *current;
+            return out;
+        }
+        current = current->next;
+    }
+    return out;
+}
+*/
+
+std::ostream& operator<<(std::ostream& out, const List_t& list)
+{
+    // while not at the end of the list, iterate through each PCB_t object in the list and print it
+    PCB_t *current = list.head;
+    while (current != NULL) {
+        out << *current;
+        current = current->next;
+    }
+    return out;
+}

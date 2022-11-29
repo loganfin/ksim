@@ -1,6 +1,5 @@
 #include <iomanip>
 #include <iostream>
-#include <sstream>
 
 #include "kernel.h"
 #include "process.h"
@@ -57,7 +56,7 @@ int Kernel_t::wait(int io_dev_num)
     return 0;
 }
 
-void Kernel_t::query(std::string target)
+std::string Kernel_t::query(std::string target)
 {
     // if the target is "all", create a vector of 
     // if a specific target is supplied, find the target in the p_table.
@@ -70,23 +69,11 @@ void Kernel_t::query(std::string target)
     if (target == "all") {
     }
     */
-    /*
     std::string info = "Process \"" + target + "\" not found.\n";
     if (p_table.find(target) == true) {
         info = "***\n" + p_table.get_info(target) + "***\n";
     }
     return info;
-    */
-    if (target == "all" && p_table.is_empty() == false) {
-        std::cout << p_table;
-        return;
-    }
-
-    if (p_table.find(target) == true) {
-        std::cout << p_table.get_pcb(target);
-        return;
-    }
-    std::cout << "Process \"" << target << "\" not found.\n";
 }
 
 int Kernel_t::update_p_table()
@@ -96,8 +83,8 @@ int Kernel_t::update_p_table()
 
 void Kernel_t::prompt()
 {
-    // use std::ostream?
+    // use std::stringstream?
+    std::stringstream info = "ksim-" << std::setfill('0');
     std::cout << "ksim-" << std::setfill('0') << std::setw(max_tick_digits) << ticks << "> ";
-    //std::cout << "ksim-" << std::setfill('0') << std::setw(max_tick_digits) << ticks << "> ";
     return;
 }

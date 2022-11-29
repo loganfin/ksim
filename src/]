@@ -1,6 +1,5 @@
 #pragma once
 
-#include <sstream>
 #include <string>
 
 #include "queue.h"
@@ -16,7 +15,7 @@ class Kernel_t {
         int release();                  // move running process to the "Exit" queue
         int step();                     // advance the simulation and does various housekeeping tasks
         int wait(int io_dev_num);                  // move running process to the "Blocked" queue and set waiting_on in Process_t
-        void query(std::string target = "all"); // print information on all processes in the p_table
+        int query(std::string = "all"); // print information on all processes in the p_table
 
         int update_p_table();           // update the proper PCB_t object in p_table with the relevant information
         void prompt();

@@ -34,14 +34,22 @@ int main()
             continue;
         }
         else if (argv.at(0) == "query") {
-            std::cout << "query" << std::endl;
+            try {
+                ksimOS.query(argv.at(1));
+                //std::cout << ksimOS.query(argv.at(1));
+            }
+            catch (...) {
+                ksimOS.query();
+                //std::cout << ksimOS.query();
+            }
             continue;
         }
         /* double arg opcodes */
         else if (argv.at(0) == "add") {
             try {
-                ksimOS.add(argv.at(1));
-                std::cout << "add" << std::endl;
+                if (ksimOS.add(argv.at(1)) == 1) {
+                    std::cout << "Process named \"" << argv.at(1) << "\" is already being hosted.\n";
+                }
                 //continue;
             }
             catch (...) {
