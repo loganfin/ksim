@@ -1,9 +1,10 @@
 #include "queue.h"
 
 #include <iostream> // temp
-Queue_t::Queue_t(std::string desired_type) : type(desired_type), head(nullptr), tail(nullptr)
+Queue_t::Queue_t()
+    : head(nullptr), tail(nullptr)
 {
-    std::cout << "queue with type \"" << type << "\" created" << std::endl;
+    std::cout << "queue created" << std::endl;
 }
 
 Queue_t::~Queue_t()
@@ -17,6 +18,12 @@ Queue_t::~Queue_t()
     }
     head = nullptr;
     std::cout << "queue with type \"" << type << "\" destroyed" << std::endl;
+}
+
+void Queue_t::set_type(std::string des_type)
+{
+    type = des_type;
+    return;
 }
 
 void Queue_t::enqueue(Process_t *data_addr)

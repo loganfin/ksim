@@ -6,6 +6,18 @@
 #include "queue.h"
 #include "list.h"
 
+enum class States {
+    blocked_q_0,
+    blocked_q_1,
+    blocked_q_2,
+    blocked_q_3,
+    new_q,
+    ready_q,
+    running_q,
+    exit_q,
+    total_q
+};
+
 class Kernel_t {
     public:
         Kernel_t();
@@ -26,12 +38,5 @@ class Kernel_t {
         const int max_tick_digits = 9;
         int ticks;
         List_t p_table;
-        Queue_t new_q;
-        Queue_t ready_q;
-        Queue_t running_q;
-        Queue_t exit_q;
-        Queue_t blocked_q_0;
-        Queue_t blocked_q_1;
-        Queue_t blocked_q_2;
-        Queue_t blocked_q_3;
+        Queue_t *states;
 };
