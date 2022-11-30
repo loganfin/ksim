@@ -67,6 +67,7 @@ int Kernel_t::add(std::string pcb_name)
 
 int Kernel_t::io_event(int io_dev_num)
 {
+    ticks += 1;
     // check if any processes exist in the specified blocked queue
     if (states[io_dev_num].is_empty() == true) {
         // if no processes... print "No processes waiting on <io_dev_num>."
@@ -81,9 +82,8 @@ int Kernel_t::io_event(int io_dev_num)
         temp_process = states[io_dev_num].dequeue();
         p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
         states[(int)States::ready_q].enqueue(temp_process);
-        std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+        std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << io_dev_num << ") to " << states[(int)States::ready_q].type << ".\n";
     }
-    ticks += 1;
     return 3;
 }
 
@@ -108,7 +108,10 @@ int Kernel_t::step()
 {
     std::string p_name;
     Process_t *temp_process = nullptr;
+    PCB_t *temp_pcb = nullptr;
+    int temp_ticks = 0;
     int add_ticks = 1;
+    int min_ticks_wait = 1024;
     // remove all process in the Exit state
     while (states[(int)States::exit_q].is_empty() == false) {
         temp_process = states[(int)States::exit_q].kill_head();
@@ -119,12 +122,45 @@ int Kernel_t::step()
 
     // try to move 1 process from New to Ready
     if (states[(int)States::new_q].is_empty() == false) {
+        // need to insert processes into the ready_q based on the last time they were run (least recently run processes to the front)
+        // write a queue member function to return a Process_t* of the ith item in the queue (get_p(1))
+
+        // get the Process_t* for the process that is moving from New to Ready (called new_p)
+        // then in a loop:
+        // starting from head, start getting each Process_t* in the queue (called temp_p)
+        // use the Process_t* to look up the corresponding PCB_t in the p_table
+        // compare the "last_run" value of new_p and temp_p
+        // if "last_run" of new_p PCB_t is less than that of temp_p, insert new_p before temp_p in the queue
+        // (need to update set_pcb_state to accomadate "last_run")
+
         temp_process = states[(int)States::new_q].dequeue();
         p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
         states[(int)States::ready_q].enqueue(temp_process);
         std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::new_q].type << " to " << states[(int)States::ready_q].type << ".\n";
     }
-    // try to advance 1 process from blocked to ready if possible
+
+    // try to advance 1 process from each blocked queue to ready if possible
+    for (int i = 0; i < 4; i++) {
+        if (states[i].is_empty() == false) {
+            // check how long the process in the queue has been waiting
+            // if the process has been waiting for longer than 1024 ticks, move to Ready
+            temp_process = states[i].top();
+            temp_ticks = p_table.get_waiting_since(temp_process);
+            std::cout << "test 1" << std::endl;
+            if (ticks - temp_ticks >= min_ticks_wait) {
+                std::cout << "test 2" << std::endl;
+                temp_process = states[i].dequeue();
+                p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
+                states[(int)States::ready_q].enqueue(temp_process);
+                //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
+                continue;
+            }
+            continue;
+            // else, continue and try the other blocked queues
+        }
+    }
+
     // move Running process to Ready queue
     if (states[(int)States::running_q].is_empty() == false) {
         temp_process = states[(int)States::running_q].dequeue();

@@ -4,7 +4,7 @@
 
 #include <iostream> // temp
 PCB_t::PCB_t(std::string desired_pid, Process_t *desired_instance)
-    : next(nullptr), p_instance(desired_instance), pid(desired_pid), waiting_on(-1), waiting_since(-1)
+    : next(nullptr), p_instance(desired_instance), pid(desired_pid), waiting_on(-1), waiting_since(-1), last_run(0)
 {
     std::cout << "pcb with pid \"" << pid << "\" created" << std::endl;
 }

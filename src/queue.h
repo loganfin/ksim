@@ -12,6 +12,8 @@ class Queue_t {
 
         void set_type(std::string des_type);
         void enqueue(Process_t *data_addr);
+        void insert(Process_t *data_addr);
+        Process_t *top();
         Process_t *dequeue();
         Process_t *kill_head();
         bool is_empty();

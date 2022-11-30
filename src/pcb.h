@@ -13,6 +13,7 @@ class PCB_t {
 
         int set_state(std::string desired_state);
 
+
         /* linked list components */
         PCB_t *next;                    // the next PCB_t in the p_table
         /* node data fields */
@@ -21,6 +22,7 @@ class PCB_t {
         std::string state;              // the type of Queue_t that p_instance currently resides in
         int waiting_on;                 // the io_dev_num of the device the process is currently waiting on, = -1 if not currently blocked
         int waiting_since;              // the tick that the process was blocked on, = -1 if not currently blocked
+        int last_run;
         friend std::ostream& operator<<(std::ostream& out, const PCB_t& pcb);
     private:
 };

@@ -39,6 +39,11 @@ void Queue_t::enqueue(Process_t *data_addr)
     return;
 }
 
+Process_t *Queue_t::top()
+{
+    return head;
+}
+
 Process_t *Queue_t::dequeue()
 {
     Process_t *current = head;

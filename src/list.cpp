@@ -50,6 +50,18 @@ int List_t::prepend(std::string pcb_name, Process_t *data_addr)
     return 0;
 }
 
+int List_t::get_waiting_since(Process_t *target)
+{
+    PCB_t *current = head;
+    while (current != nullptr) {
+        if (current->p_instance == target) {
+            return current->waiting_since;
+        }
+        current = current->next;
+    }
+    return -1;
+}
+
 std::string List_t::set_pcb_state(Process_t *target, std::string desired_state, int waiting_since, int waiting_on)
 {
     PCB_t *current = head;
