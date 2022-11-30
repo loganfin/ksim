@@ -65,7 +65,7 @@ int main()
         else if (argv.at(0) == "io-event") {
             try {
                 if (std::stoi(argv.at(1)) > -1 && std::stoi(argv.at(1)) < 4) {
-                    std::cout << "io-event" << std::endl;
+                    ksimOS.io_event(std::stoi(argv.at(1)));
                     continue;
                 }
             }
@@ -77,7 +77,7 @@ int main()
         else if (argv.at(0) == "wait") {
             try {
                 if (std::stoi(argv.at(1)) > -1 && std::stoi(argv.at(1)) < 4) {
-                    ksimOS.wait(stoi(argv.at(1)));
+                    ksimOS.wait(std::stoi(argv.at(1)));
                     continue;
                 }
             }

@@ -68,8 +68,22 @@ int Kernel_t::add(std::string pcb_name)
 int Kernel_t::io_event(int io_dev_num)
 {
     // check if any processes exist in the specified blocked queue
-    // if no processes... print "No processes waiting on <io_dev_num>."
-    // if processes, move all processes to the ready queue
+    if (states[io_dev_num].is_empty() == true) {
+        // if no processes... print "No processes waiting on <io_dev_num>."
+        // this error message should move to main.cpp
+        std::cout << "No processes waiting on " << io_dev_num << ".\n";
+        return 0;
+    }
+    // if processes exist, move all processes to the ready queue
+    std::string p_name;
+    Process_t *temp_process;
+    while (states[io_dev_num].is_empty() == false) {
+        temp_process = states[io_dev_num].dequeue();
+        p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
+        states[(int)States::ready_q].enqueue(temp_process);
+        std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+    }
+    ticks += 1;
     return 3;
 }
 
