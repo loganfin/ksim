@@ -41,12 +41,22 @@ int List_t::append(std::string pcb_name, Process_t *data_addr)
 
 int List_t::prepend(std::string pcb_name, Process_t *data_addr)
 {
-    PCB_t *temp_head = head;
+    PCB_t *current = head;
+    PCB_t *prev = nullptr;
     PCB_t *temp_pcb = new PCB_t(pcb_name, data_addr);
 
     temp_pcb->set_state("New");
-    head = temp_pcb;
-    temp_pcb->next = temp_head;
+    if (head == nullptr) {
+        head = temp_pcb;
+        return 0;
+    }
+
+    while (current != nullptr) {
+        prev = current;
+        current = current->next;
+    }
+    prev->next = temp_pcb;
+    //temp_pcb->next = temp_head;
     return 0;
 }
 
@@ -109,9 +119,11 @@ std::string List_t::remove_pcb(Process_t *target)
     while (current != nullptr) {
         if (current->p_instance == target) {
             p_name = current->pid;
-            prev->next = current->next;
             if (current == head) {
-                head = nullptr;
+                head = current->next;;
+            }
+            else {
+                prev->next = current->next;
             }
             delete current;
             current = nullptr;

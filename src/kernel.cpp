@@ -114,6 +114,7 @@ int Kernel_t::step()
     int temp_ticks = 0;
     int add_ticks = 1;
     int min_ticks_wait = 1024;
+
     // remove all process in the Exit state
     while (states[(int)States::exit_q].is_empty() == false) {
         temp_process = states[(int)States::exit_q].kill_head();
@@ -124,14 +125,9 @@ int Kernel_t::step()
 
     // try to move 1 process from New to Ready
     if (states[(int)States::new_q].is_empty() == false) {
-        // need to insert processes into the ready_q based on the last time they were run (least recently run processes to the front)
-
-        // write a queue member function to return a Process_t* of the ith item in the queue (get_p(1))
         for (int i = 0; i < states[(int)States::new_q].length; i++) {
             temp_process = states[(int)States::ready_q].find_at(i);
             new_process = states[(int)States::new_q].dequeue();
-            std::cout << "p_table.get_last_run(new_process): " << p_table.get_last_run(new_process) << std::endl;
-            std::cout << "p_table.get_last_run(temp_process): " << p_table.get_last_run(temp_process) << std::endl;
             if (p_table.get_last_run(new_process) <= p_table.get_last_run(temp_process)) {
                 p_name = p_table.set_pcb_state(new_process, states[(int)States::ready_q].type); // update this to include position
                 states[(int)States::ready_q].insert(new_process, i);
@@ -150,21 +146,6 @@ int Kernel_t::step()
             }
             */
         }
-
-        // get the Process_t* for the process that is moving from New to Ready (called new_p)
-        // then in a loop:
-        // starting from head, start getting each Process_t* in the queue (called temp_p)
-        // use the Process_t* to look up the corresponding PCB_t in the p_table
-        // compare the "last_run" value of new_p and temp_p
-        // if "last_run" of new_p PCB_t is less than that of temp_p, insert new_p before temp_p in the queue
-        // (need to update set_pcb_state to accomadate "last_run")
-
-        /*
-           temp_process = states[(int)States::new_q].dequeue();
-           p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
-           states[(int)States::ready_q].enqueue(temp_process);
-           std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::new_q].type << " to " << states[(int)States::ready_q].type << ".\n";
-           */
     }
 
     // try to advance 1 process from each blocked queue to ready if possible
@@ -172,7 +153,6 @@ int Kernel_t::step()
         if (states[i].is_empty() == false) {
             // check how long the process in the queue has been waiting
             // if the process has been waiting for longer than 1024 ticks, move to Ready
-            std::cout << "states[" << i << "].is_empty() == false" << std::endl;
             temp_process = states[i].top();
             temp_ticks = p_table.get_waiting_since(temp_process);
             if (ticks - temp_ticks >= min_ticks_wait) {
@@ -195,28 +175,22 @@ int Kernel_t::step()
                         break;
                     }
                 }
-                /*
-                   temp_process = states[i].dequeue();
-                   p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
-                   states[(int)States::ready_q].enqueue(temp_process);
-                //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
-                std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
-                */
                 continue;
             }
             continue;
-            // else, continue and try the other blocked queues
         }
     }
 
     // move Running process to Ready queue
     if (states[(int)States::running_q].is_empty() == false) {
+        // this will always be the most recently run process, so can just be appended to the queue
         temp_process = states[(int)States::running_q].dequeue();
         p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
         p_table.set_last_run(temp_process, ticks);
         states[(int)States::ready_q].enqueue(temp_process);
         std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::running_q].type << " to " << states[(int)States::ready_q].type << ".\n";
     }
+
     // try to move 1 process from Ready to Running
     if (states[(int)States::ready_q].is_empty() == false) {
         temp_process = states[(int)States::ready_q].dequeue();

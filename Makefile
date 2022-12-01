@@ -2,7 +2,7 @@
 # to clean, type `make clean`
 
 CXX = g++
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -Wextra -std=c++11
 BIN = ksim
 # replace OBJS and HDRS with a
 #HDRS =

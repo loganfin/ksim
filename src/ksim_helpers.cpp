@@ -5,7 +5,7 @@
 
 int tokenize(std::string buffer, std::vector<std::string> &argv)
 {
-    int end = 0;
+    unsigned int end = 0;
     int start = 0;
 
     for (end = 0; end < buffer.length(); end++) {
