@@ -292,6 +292,5 @@ void Kernel_t::prompt()
         ticks = ticks - max_ticks - 1;
     }
     std::cout << "ksim-" << std::setfill('0') << std::setw(max_tick_digits) << ticks << "> ";
-    //std::cout << "ksim-" << std::setfill('0') << std::setw(max_tick_digits) << ticks << "> ";
     return;
 }

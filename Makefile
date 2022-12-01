@@ -4,18 +4,16 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++11
 BIN = ksim
-# replace OBJS and HDRS with a
-#HDRS =
 SRCS = $(wildcard $(SRCDIR)/*cpp)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SRCS))
-#OBJS = $(BUILD)/main.o $(BUILD)/ksim.o
+
 # directories
 BUILDDIR = build
 SRCDIR = src
 
 all: $(BIN)
 
-$(BIN): $(OBJS) | $(BUILDDIR)
+$(BIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
