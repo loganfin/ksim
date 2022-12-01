@@ -68,6 +68,7 @@ int Kernel_t::add(std::string pcb_name)
 
 int Kernel_t::io_event(int io_dev_num)
 {
+    // need to add insert
     ticks += 1;
     // check if any processes exist in the specified blocked queue
     if (states[io_dev_num].is_empty() == true) {
@@ -78,12 +79,34 @@ int Kernel_t::io_event(int io_dev_num)
     }
     // if processes exist, move all processes to the ready queue
     std::string p_name;
-    Process_t *temp_process;
+    Process_t *temp_process = nullptr;
+    Process_t *new_process = nullptr;
     while (states[io_dev_num].is_empty() == false) {
-        temp_process = states[io_dev_num].dequeue();
-        p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
-        states[(int)States::ready_q].enqueue(temp_process);
-        std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << io_dev_num << ") to " << states[(int)States::ready_q].type << ".\n";
+        for (int i = 0; i < states[io_dev_num].length; i++) {
+            temp_process = states[(int)States::ready_q].find_at(i);
+            new_process = states[io_dev_num].top();
+            if (p_table.get_last_run(new_process) <= p_table.get_last_run(temp_process)) {
+                new_process = states[io_dev_num].dequeue();
+                p_name = p_table.set_pcb_state(new_process, states[(int)States::ready_q].type);
+                states[(int)States::ready_q].insert(new_process, i);
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                break;
+            }
+            if (i == states[io_dev_num].length - 1) {
+                temp_process = states[io_dev_num].dequeue();
+                p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
+                states[(int)States::ready_q].enqueue(temp_process);
+                //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                break;
+            }
+        }
+        /*
+           temp_process = states[io_dev_num].dequeue();
+           p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
+           states[(int)States::ready_q].enqueue(temp_process);
+           std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << io_dev_num << ") to " << states[(int)States::ready_q].type << ".\n";
+           */
     }
     return 3;
 }
@@ -127,8 +150,9 @@ int Kernel_t::step()
     if (states[(int)States::new_q].is_empty() == false) {
         for (int i = 0; i < states[(int)States::new_q].length; i++) {
             temp_process = states[(int)States::ready_q].find_at(i);
-            new_process = states[(int)States::new_q].dequeue();
+            new_process = states[(int)States::new_q].top();
             if (p_table.get_last_run(new_process) <= p_table.get_last_run(temp_process)) {
+                new_process = states[(int)States::new_q].dequeue();
                 p_name = p_table.set_pcb_state(new_process, states[(int)States::ready_q].type); // update this to include position
                 states[(int)States::ready_q].insert(new_process, i);
                 std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::new_q].type << " to " << states[(int)States::ready_q].type << ".\n";
@@ -136,13 +160,13 @@ int Kernel_t::step()
             }
             /* need to double check if this is necessary
                is it possible for a new process to have a greater last_run than a process in the ready queue?
-            if (i == states[(int)States::new_q].length - 1) {
-                temp_process = states[(int)States::new_q].dequeue();
-                p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
-                states[(int)States::ready_q].enqueue(temp_process);
-                //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
-                std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::new_q].type << " to " << states[(int)States::ready_q].type << ".\n";
-                break;
+               if (i == states[(int)States::new_q].length - 1) {
+               temp_process = states[(int)States::new_q].dequeue();
+               p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
+               states[(int)States::ready_q].enqueue(temp_process);
+            //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
+            std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::new_q].type << " to " << states[(int)States::ready_q].type << ".\n";
+            break;
             }
             */
         }
