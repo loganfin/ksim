@@ -10,7 +10,9 @@ class List_t {
 
         int prepend(std::string pcb_name, Process_t *data_addr);
         int get_waiting_since(Process_t *target);
+        int get_last_run(Process_t *target);
         std::string set_pcb_state(Process_t *target, std::string desired_state, int waiting_since = -1, int io_dev_num = -1);
+        std::string set_last_run(Process_t *target, int last_run);
         std::string remove_pcb(Process_t *target);
         bool find(std::string target);
         bool is_empty();

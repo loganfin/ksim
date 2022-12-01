@@ -62,6 +62,18 @@ int List_t::get_waiting_since(Process_t *target)
     return -1;
 }
 
+int List_t::get_last_run(Process_t *target)
+{
+    PCB_t *current = head;
+    while (current != nullptr) {
+        if (current->p_instance == target) {
+            return current->last_run;
+        }
+        current = current->next;
+    }
+    return 0;
+}
+
 std::string List_t::set_pcb_state(Process_t *target, std::string desired_state, int waiting_since, int waiting_on)
 {
     PCB_t *current = head;
@@ -71,6 +83,18 @@ std::string List_t::set_pcb_state(Process_t *target, std::string desired_state, 
             current->waiting_since = waiting_since;
             current->waiting_on = waiting_on;
             return current->pid;
+        }
+        current = current->next;
+    }
+    return "Error";
+}
+
+std::string List_t::set_last_run(Process_t *target, int last_run)
+{
+    PCB_t *current = head;
+    while (current != nullptr) {
+        if (current->p_instance == target) {
+            current->last_run = last_run;
         }
         current = current->next;
     }

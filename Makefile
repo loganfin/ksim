@@ -1,8 +1,8 @@
 # to build, type `make`
 # to clean, type `make clean`
 
-CC = g++
-CFLAGS = -Wall -std=c++11
+CXX = g++
+CXXFLAGS = -Wall -std=c++11
 BIN = ksim
 # replace OBJS and HDRS with a
 #HDRS =
@@ -16,10 +16,10 @@ SRCDIR = src
 all: $(BIN)
 
 $(BIN): $(OBJS) | $(BUILDDIR)
-	$(CC) $(CFLAGS) $(OBJS) -o $@
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $@
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
-	$(CC) $(CFLAGS) -c -MMD $< -o $@
+	$(CXX) $(CXXFLAGS) -MMD -c $< -o $@
 
 $(BUILDDIR):
 	mkdir $(BUILDDIR)
@@ -27,4 +27,4 @@ $(BUILDDIR):
 clean:
 	rm -f $(BIN) $(BUILDDIR)/*
 
--include *.d
+-include $(BUILDDIR)/*.d
