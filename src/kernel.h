@@ -35,7 +35,7 @@ class Kernel_t {
     private:
         // maybe Hash_t p_table;
         const int max_ticks = 999999999;
-        const int max_tick_digits = 9;
+        //const int max_tick_digits = 9;
         int ticks;
         List_t p_table;
         Queue_t *states;

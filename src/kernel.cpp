@@ -288,6 +288,7 @@ int Kernel_t::update_p_table()
 void Kernel_t::prompt()
 {
     // use std::ostream?
+    int max_tick_digits = std::to_string(max_ticks).size();
     if (ticks > max_ticks) {
         ticks = ticks - max_ticks - 1;
     }
