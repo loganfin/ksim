@@ -91,7 +91,8 @@ int Kernel_t::io_event(int io_dev_num)
                 p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
                 states[(int)States::ready_q].enqueue(temp_process);
                 //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
-                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                //std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
                 break;
             }
             //std::cout << "after first condition" << std::endl;
@@ -103,7 +104,8 @@ int Kernel_t::io_event(int io_dev_num)
                 new_process = states[io_dev_num].dequeue();
                 p_name = p_table.set_pcb_state(new_process, states[(int)States::ready_q].type);
                 states[(int)States::ready_q].insert(new_process, i);
-                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                //std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
                 break;
             }
             //std::cout << "i: " << i << std::endl;
@@ -118,7 +120,8 @@ int Kernel_t::io_event(int io_dev_num)
                 states[(int)States::ready_q].enqueue(temp_process);
                 //std::cout << "test 6 "<< i << std::endl;
                 //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
-                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                //std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
                 break;
             }
             //std::cout << "end of for loop" << std::endl;
@@ -317,6 +320,11 @@ void Kernel_t::query(std::string target)
 
     if (p_table.find(target) == true) {
         std::cout << p_table.get_pcb(target);
+        return;
+    }
+
+    if (target == "all" && p_table.is_empty() == true) {
+        std::cout << "No processes being hosted.\n";
         return;
     }
     std::cout << "Process \"" << target << "\" not found.\n";
