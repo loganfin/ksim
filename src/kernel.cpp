@@ -92,7 +92,7 @@ int Kernel_t::io_event(int io_dev_num)
                 states[(int)States::ready_q].enqueue(temp_process);
                 //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
                 //std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
-                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << io_dev_num << ") to " << states[(int)States::ready_q].type << ".\n";
                 break;
             }
             //std::cout << "after first condition" << std::endl;
@@ -105,7 +105,7 @@ int Kernel_t::io_event(int io_dev_num)
                 p_name = p_table.set_pcb_state(new_process, states[(int)States::ready_q].type);
                 states[(int)States::ready_q].insert(new_process, i);
                 //std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
-                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << io_dev_num << ") to " << states[(int)States::ready_q].type << ".\n";
                 break;
             }
             //std::cout << "i: " << i << std::endl;
@@ -121,7 +121,7 @@ int Kernel_t::io_event(int io_dev_num)
                 //std::cout << "test 6 "<< i << std::endl;
                 //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
                 //std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
-                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " (iodev=" << io_dev_num  << ") to " << states[(int)States::ready_q].type << ".\n";
                 break;
             }
             //std::cout << "end of for loop" << std::endl;
