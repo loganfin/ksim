@@ -4,7 +4,7 @@
 Queue_t::Queue_t()
     : length(0), head(nullptr), tail(nullptr)
 {
-    std::cout << "queue created" << std::endl;
+    //std::cout << "queue created" << std::endl;
 }
 
 Queue_t::~Queue_t()
@@ -18,7 +18,7 @@ Queue_t::~Queue_t()
         current = next;
     }
     head = nullptr;
-    std::cout << "queue with type \"" << type << "\" destroyed" << std::endl;
+    //std::cout << "queue with type \"" << type << "\" destroyed" << std::endl;
 }
 
 void Queue_t::set_type(std::string des_type)
@@ -86,6 +86,9 @@ Process_t *Queue_t::find_at(int index)
     Process_t *current = head;
     for (int i = index; i > 0; i--) {
         current = current->next;
+        if (current == nullptr) {
+            return nullptr;
+        }
         //return current;
     }
     return current;

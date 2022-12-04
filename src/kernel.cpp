@@ -36,13 +36,13 @@ Kernel_t::Kernel_t()
                 break;
         }
     }
-    std::cout << "kernel created" << std::endl;
+    //std::cout << "kernel created" << std::endl;
 }
 
 Kernel_t::~Kernel_t()
 {
     delete[] states;
-    std::cout << "kernel destroyed" << std::endl;
+    //std::cout << "kernel destroyed" << std::endl;
 }
 
 int Kernel_t::add(std::string pcb_name)
@@ -74,7 +74,7 @@ int Kernel_t::io_event(int io_dev_num)
     if (states[io_dev_num].is_empty() == true) {
         // if no processes... print "No processes waiting on <io_dev_num>."
         // this error message should move to main.cpp
-        std::cout << "No processes waiting on " << io_dev_num << ".\n";
+        std::cout << "No processes waiting on device " << io_dev_num << ".\n";
         return 0;
     }
     // if processes exist, move all processes to the ready queue
@@ -82,17 +82,11 @@ int Kernel_t::io_event(int io_dev_num)
     Process_t *temp_process = nullptr;
     Process_t *new_process = nullptr;
     while (states[io_dev_num].is_empty() == false) {
+        //std::cout << "test 1" << std::endl;
         for (int i = 0; i < states[io_dev_num].length; i++) {
-            temp_process = states[(int)States::ready_q].find_at(i);
-            new_process = states[io_dev_num].top();
-            if (p_table.get_last_run(new_process) <= p_table.get_last_run(temp_process)) {
-                new_process = states[io_dev_num].dequeue();
-                p_name = p_table.set_pcb_state(new_process, states[(int)States::ready_q].type);
-                states[(int)States::ready_q].insert(new_process, i);
-                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
-                break;
-            }
-            if (i == states[io_dev_num].length - 1) {
+            //std::cout << "top of for loop" << std::endl;
+            if (states[(int)States::ready_q].is_empty() == true) {
+                //std::cout << "in first condition" << std::endl;
                 temp_process = states[io_dev_num].dequeue();
                 p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
                 states[(int)States::ready_q].enqueue(temp_process);
@@ -100,6 +94,34 @@ int Kernel_t::io_event(int io_dev_num)
                 std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
                 break;
             }
+            //std::cout << "after first condition" << std::endl;
+            temp_process = states[(int)States::ready_q].find_at(i);
+            //std::cout << "test 2 "<< i << std::endl;
+            new_process = states[io_dev_num].top();
+            //std::cout << "before second condition" << std::endl;
+            if (p_table.get_last_run(new_process) <= p_table.get_last_run(temp_process)) {
+                new_process = states[io_dev_num].dequeue();
+                p_name = p_table.set_pcb_state(new_process, states[(int)States::ready_q].type);
+                states[(int)States::ready_q].insert(new_process, i);
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                break;
+            }
+            //std::cout << "i: " << i << std::endl;
+            //std::cout << "states[io_dev_num].length - 1: " << states[io_dev_num].length - 1 <<  std::endl;
+            //std::cout << "test 3 "<< i << std::endl;
+            if (i == states[io_dev_num].length - 1) {
+                //std::cout << "test 7 "<< i << std::endl;
+                temp_process = states[io_dev_num].dequeue();
+                //std::cout << "test 4 "<< i << std::endl;
+                p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
+                //std::cout << "test 5 "<< i << std::endl;
+                states[(int)States::ready_q].enqueue(temp_process);
+                //std::cout << "test 6 "<< i << std::endl;
+                //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
+                std::cout << "Process \"" << p_name << "\" moved from " << states[io_dev_num].type << " to " << states[(int)States::ready_q].type << ".\n";
+                break;
+            }
+            //std::cout << "end of for loop" << std::endl;
         }
         /*
            temp_process = states[io_dev_num].dequeue();
@@ -138,12 +160,15 @@ int Kernel_t::step()
     int add_ticks = 1;
     int min_ticks_wait = 1024;
 
+    //std::cout << "test 1" << std::endl;
+
     // remove all process in the Exit state
     while (states[(int)States::exit_q].is_empty() == false) {
         temp_process = states[(int)States::exit_q].kill_head();
         p_name = p_table.remove_pcb(temp_process);
         std::cout << "Process \"" << p_name << "\" is banished to the void.\n";
     }
+    //std::cout << "after the removal of exit state processes" << std::endl;
     p_name = "";
 
     // try to move 1 process from New to Ready
@@ -172,6 +197,8 @@ int Kernel_t::step()
         }
     }
 
+    //std::cout << "after the moving of new to ready" << std::endl;
+
     // try to advance 1 process from each blocked queue to ready if possible
     for (int i = 0; i < 4; i++) {
         if (states[i].is_empty() == false) {
@@ -181,6 +208,14 @@ int Kernel_t::step()
             temp_ticks = p_table.get_waiting_since(temp_process);
             if (ticks - temp_ticks >= min_ticks_wait) {
                 for (int j = 0; j < states[i].length; j++) {
+                    if (states[(int)States::ready_q].is_empty() == true) {
+                        temp_process = states[i].dequeue();
+                        p_name = p_table.set_pcb_state(temp_process, states[(int)States::ready_q].type);
+                        states[(int)States::ready_q].enqueue(temp_process);
+                        //std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " to " << states[(int)States::ready_q].type << ".\n";
+                        std::cout << "Process \"" << p_name << "\" moved from " << states[i].type << " (iodev=" << i << ") to " << states[(int)States::ready_q].type << ".\n";
+                        break;
+                    }
                     temp_process = states[(int)States::ready_q].find_at(j);
                     new_process = states[i].top();
                     if (p_table.get_last_run(new_process) <= p_table.get_last_run(temp_process)) {
@@ -205,6 +240,8 @@ int Kernel_t::step()
         }
     }
 
+    //std::cout << "after the moving of blocked to ready" << std::endl;
+
     // move Running process to Ready queue
     if (states[(int)States::running_q].is_empty() == false) {
         // this will always be the most recently run process, so can just be appended to the queue
@@ -215,6 +252,8 @@ int Kernel_t::step()
         std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::running_q].type << " to " << states[(int)States::ready_q].type << ".\n";
     }
 
+    //std::cout << "after the moving of running process to ready" << std::endl;
+
     // try to move 1 process from Ready to Running
     if (states[(int)States::ready_q].is_empty() == false) {
         temp_process = states[(int)States::ready_q].dequeue();
@@ -223,6 +262,9 @@ int Kernel_t::step()
         std::cout << "Process \"" << p_name << "\" moved from " << states[(int)States::ready_q].type << " to " << states[(int)States::running_q].type << ".\n";
         add_ticks = 256;
     }
+
+    //std::cout << "after the moving of ready process to running" << std::endl;
+
     ticks += add_ticks;
     return 0;
 }

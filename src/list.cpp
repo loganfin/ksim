@@ -5,7 +5,7 @@
 #include <iostream> // temp
 List_t::List_t() : head(nullptr)
 {
-    std::cout << "list created" << std::endl;
+    //std::cout << "list created" << std::endl;
 }
 
 List_t::~List_t()
@@ -18,7 +18,7 @@ List_t::~List_t()
         current = next;
     }
     head = nullptr;
-    std::cout << "list destroyed" << std::endl;
+    //std::cout << "list destroyed" << std::endl;
 }
 
 /*
