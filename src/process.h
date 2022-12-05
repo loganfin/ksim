@@ -5,8 +5,7 @@ class Process_t {
     public:
         Process_t();
         ~Process_t();
-        /* queue components */
-        Process_t *next;                // the next Process_t instance in the queue
+        Process_t *next;     // the next Process_t instance in the queue
     private:
 };
 

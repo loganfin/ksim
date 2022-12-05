@@ -1,10 +1,7 @@
 #include "queue.h"
 
-#include <iostream> // temp
-Queue_t::Queue_t()
-    : length(0), head(nullptr), tail(nullptr)
+Queue_t::Queue_t() : length(0), head(nullptr), tail(nullptr)
 {
-    //std::cout << "queue created" << std::endl;
 }
 
 Queue_t::~Queue_t()
@@ -18,7 +15,6 @@ Queue_t::~Queue_t()
         current = next;
     }
     head = nullptr;
-    //std::cout << "queue with type \"" << type << "\" destroyed" << std::endl;
 }
 
 void Queue_t::set_type(std::string des_type)
@@ -52,7 +48,6 @@ void Queue_t::insert(Process_t *data_addr, int index)
     for (int i = index; i > 0; i--) {
         prev = current;
         current = current->next;
-        //return current;
     }
     data_addr->next = current;
 
@@ -64,16 +59,6 @@ void Queue_t::insert(Process_t *data_addr, int index)
     }
 
     return;
-
-    /*
-    while (current != nullptr) {
-        if (current->position == index) {
-            return;
-        }
-        current = current->next;
-    }
-    return;
-    */
 }
 
 Process_t *Queue_t::top()
@@ -89,7 +74,6 @@ Process_t *Queue_t::find_at(int index)
         if (current == nullptr) {
             return nullptr;
         }
-        //return current;
     }
     return current;
 }

@@ -1,3 +1,8 @@
+/* Logan Finley
+ * cs240
+ * hw4 - ksim
+ */
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -21,7 +26,6 @@ int main()
         }
         /* single arg opcodes */
         if (argv.at(0) == "exit") {
-            std::cout << "Exiting...\n";
             break;
             // return 0; //?
         }
@@ -41,11 +45,9 @@ int main()
         else if (argv.at(0) == "query") {
             try {
                 ksimOS.query(argv.at(1));
-                //std::cout << ksimOS.query(argv.at(1));
             }
             catch (...) {
                 ksimOS.query();
-                //std::cout << ksimOS.query();
             }
             continue;
         }
@@ -55,7 +57,6 @@ int main()
                 if (ksimOS.add(argv.at(1)) == 1) {
                     std::cout << "Process named \"" << argv.at(1) << "\" is already being hosted.\n";
                 }
-                //continue;
             }
             catch (...) {
                 std::cout << "Opcode \"" << argv.at(0) << "\" requires one operand.\n";
