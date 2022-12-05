@@ -1,4 +1,6 @@
 #include <iomanip>
+#include <iostream>
+
 #include "pcb.h"
 #include "process.h"
 
